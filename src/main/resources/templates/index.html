@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Terminal de Registo Arasaka</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" th:href="@{/CoresINDX.css}">
+
+</head>
+<body>
+
+  <img src="https://i.postimg.cc/QdNJVLYr/image.png" alt="Logo da Arasaka" class="arasaka-corner-logo">
+
+  <button id="btnLoginAdm">Login ADM</button>
+
+  <div id="modalLogin" class="modal">
+    <div class="modal-content">
+      <span class="close" id="fecharModal">&times;</span>
+      <h2 style="text-align: center; text-transform: uppercase; letter-spacing: 0.1em;">Acesso Administrativo</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="usuario">ID de Administrador</label>
+          <input type="text" id="usuario" placeholder="Insira a sua ID" required>
+        </div>
+        <div class="form-group">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" placeholder="Insira a sua senha" required>
+        </div>
+        <button type="submit">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="form-container">
+    <h1>Registo Arasaka</h1>
+    <form id="cidadaoForm">
+
+      <div class="profile-pic-preview-container">
+        <img id="profilePicPreview" class="profile-pic" alt="Retrato do Ativo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzU1NTU1NSI+PHBhdGggZD0iTTIxIDE5VjVINWMtMS4xIDAtMiAuOS0yIDJ2MTBjMCAxLjEuOSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMnpNNi41IDE1LjVMMTAgMTJsMyA0aDQuNWwtNi41LTguNUw2LjUgMTUuNXoiLz48L3N2Zz4=">
+        <div id="profilePicError" class="profile-pic-error">LINK<br>INVÁLIDO</div>
+      </div>
+
+      <div class="form-group">
+        <label for="nome">Nome do Ativo</label>
+        <input type="text" id="nome" name="nome" placeholder="Inserir designação completa" required>
+      </div>
+
+      <div class="form-group">
+        <label for="idade">Idade Operacional</label>
+        <input type="number" id="idade" name="idade" placeholder="Inserir idade registada" required>
+      </div>
+
+      <div class="form-group">
+        <label for="hwidSoc">HWID do SOC</label>
+        <input type="text" id="hwidSoc" name="hwidSoc" disabled placeholder="[Gerado automaticamente pelo sistema]">
+      </div>
+
+      <div class="form-group">
+        <label for="modeloSoc">Modelo do SOC</label>
+        <input type="text" id="modeloSoc" name="modeloSoc" placeholder="Ex: Kusanagi-7, Chimera" required>
+      </div>
+
+      <div class="form-group">
+        <label for="criadoraSoc">Fabricante do SOC</label>
+        <select id="criadoraSoc" name="criadoraSoc">
+          <option value="ARASAKA">Arasaka</option>
+          <option value="MILITECH">Militech</option>
+          <option value="BIOTECH">Biotech</option>
+          <option value="HYDRA">Hydra</option>
+          <option value="KANGTOO">KANG TOO</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="classe">Classificação Social</label>
+        <select id="classe" name="classe">
+          <option value="EXECUTIVA">Executiva</option>
+          <option value="HACKER">Netrunner</option>
+          <option value="MILITAR">Militar</option>
+          <option value="CIVIL">Civil</option>
+          <option value="NEKO">Neko</option>
+          <option value="ELFA">Elfa</option>
+          <option value="HUMANO">Humano</option>
+          <option value="PROCURADO">Procurado</option>
+          <option value="CAÇADO">Caçado</option>
+          <option value="REALEZA">Realeza</option>
+          <option value="IMIGRANTE">Imigrante</option>
+          <option value="REFUGIADO">Refugiado</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="nivelAcesso">Nível de Acesso à Rede</label>
+        <select id="nivelAcesso" name="nivelAcesso">
+          <option value="PUBLICO">Público (Nível 1)</option>
+          <option value="EMPRESARIAL">Empresarial (Nível 2)</option>
+          <option value="MILITAR">Militar (Nível 3)</option>
+          <option value="REALEZA">Realeza (Nível 4)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="caminhoFoto">URL do Retrato Facial</label>
+        <input type="text" id="caminhoFoto" name="caminhoFoto" placeholder="Cole o link para o arquivo de imagem">
+      </div>
+
+      <button type="submit">Registar Ativo</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      // --- ELEMENTOS DO DOM ---
+      const formRegisto = document.getElementById('cidadaoForm');
+      const urlFotoInput = document.getElementById('caminhoFoto');
+      const previewImage = document.getElementById('profilePicPreview');
+      const errorDiv = document.getElementById('profilePicError');
+      const defaultIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzU1NTU1NSI+PHBhdGggZD0iTTIxIDE5VjVINWMtMS4xIDAtMiAuOS0yIDJ2MTBjMCAxLjEuOSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMnpNNi41IDE1LjVMMTAgMTJsMyA0aDQuNWwtNi41LTguNUw2LjUgMTUuNXoiLz48L3N2Zz4=';
+
+      const modal = document.getElementById("modalLogin");
+      const btnLoginAdm = document.getElementById("btnLoginAdm");
+      const spanFechar = document.getElementById("fecharModal");
+      const formLogin = document.getElementById("login-form");
+
+      // --- LÓGICA DO PREVIEW DA IMAGEM ---
+      previewImage.onerror = function() {
+        this.style.display = 'none';
+        errorDiv.style.display = 'block';
+      };
+      previewImage.onload = function() {
+        this.style.display = 'block';
+        errorDiv.style.display = 'none';
+      };
+
+      urlFotoInput.addEventListener('input', function () {
+        const url = this.value.trim();
+        if (url) {
+            previewImage.src = url;
+        } else {
+            previewImage.src = defaultIcon;
+            previewImage.style.display = 'block';
+            errorDiv.style.display = 'none';
+        }
+      });
+
+      // --- LÓGICA DO FORMULÁRIO DE REGISTO ---
+      formRegisto.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            if (key !== 'hwidSoc') { data[key] = value; }
+        });
+
+        try {
+          const response = await fetch('http://localhost:8080/cidadaos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+          if (response.ok) {
+            alert('ATIVO REGISTADO COM SUCESSO.');
+            this.reset();
+            previewImage.src = defaultIcon;
+          } else {
+            const error = await response.text();
+            alert('ERRO: ' + error);
+          }
+        } catch (err) {
+          alert('Erro de conexão.');
+        }
+      });
+
+      // --- LÓGICA DO MODAL DE LOGIN ---
+      btnLoginAdm.onclick = function () {
+        modal.style.display = "block";
+      }
+
+      spanFechar.onclick = function () {
+        modal.style.display = "none";
+      }
+
+      window.onclick = function (event) {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      }
+
+      formLogin.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const user = document.getElementById("usuario").value;
+        const pass = document.getElementById("senha").value;
+
+        if (user === "admin" && pass === "1234") {
+          alert("Login realizado com sucesso!");
+          window.location.href = "/admin";
+        } else {
+          alert("Utilizador ou palavra-passe incorretos.");
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>
