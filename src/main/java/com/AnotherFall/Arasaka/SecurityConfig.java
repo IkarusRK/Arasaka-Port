@@ -17,7 +17,9 @@ public class SecurityConfig {
                 auth.anyRequest().permitAll()
             )
             .csrf(csrf -> csrf.disable());
+            .cors (Customizer.withDefaults());
 
         return http.build();
     }
 }
+
